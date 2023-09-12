@@ -70,7 +70,6 @@ void CPU::run() {
 
 	    std::string lineStr = data[i];
 	    if(lineStr == "") continue;
-	    //std::cout << "line in cpu: " << lineStr << std::endl;
 	    Command command(lineStr);
 	    CommandValidator validCom(command);
 	    std::string com = command.getCommand();
