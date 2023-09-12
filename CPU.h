@@ -39,9 +39,6 @@ CPU::CPU(const std::string& p) : path{ p } {
     Parsing pars(path);
     data = pars.getData();
     lables = pars.getLables();
-    for(const auto& pair: lables) {
-    	std::cout << "the labels line first : " << pair.first  << "secord" <<pair.second << std:: endl;
-    }
     for (int i = 0; i < 8; ++i) {
         registers.push_back(Registers(static_cast<Registers::RegisterName>(i)));
     }
