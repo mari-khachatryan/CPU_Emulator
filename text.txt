@@ -1,0 +1,9 @@
+move R0, 45
+move R1, 10
+add R1, R0
+mul R1 2
+func1:
+add R1, 5
+jmp func1:
+logicOr R0, R8
+print R8
