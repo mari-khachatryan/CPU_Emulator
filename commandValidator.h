@@ -1,14 +1,11 @@
 #ifndef COMMANDVALIDATOR_H
 #define COMMANDVALIDATOR_H
 
-
 #include "command.h"
 #include <map>
 #include <algorithm>
 #include <regex>
 #include <iterator>
-
-
 
 class CommandValidator {
 public:
@@ -45,8 +42,6 @@ private:
         "r7"
     };
 };
-
-
 
 CommandValidator::CommandValidator() = default;
 
@@ -95,7 +90,6 @@ bool CommandValidator::isValidCommand() {
     return true;
 }
 
-
 bool CommandValidator::isValidRegister(const std::string& reg) {
     for (const std::string& validReg : validRegisters) {
         if (reg == validReg) {
@@ -105,7 +99,6 @@ bool CommandValidator::isValidRegister(const std::string& reg) {
     return false;
 }
 
-
 bool CommandValidator::isDigit(const std::string& str) {
     for(size_t i = 0; i < str.size(); ++i) {
         if(str[i] > 57 && str[i] > 48) {
@@ -114,7 +107,5 @@ bool CommandValidator::isDigit(const std::string& str) {
     }
     return true;
 }
-
-
 
 #endif
