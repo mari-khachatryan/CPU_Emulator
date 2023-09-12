@@ -25,8 +25,8 @@ Before you can use the Simple CPU Simulator, ensure you have the following depen
 1. Clone this repository to your local machine:
 
    ```bash
-   git clone https://github.com/yourusername/simple-cpu-simulator.git
-   
+   git clone git@github.com:mari-khachatryan/CPU_Emulator.git
+  
 Compile the project:
 g++ main.cpp -o cpu_simulator (or g++ main.cpp)
 
@@ -43,6 +43,7 @@ R0 = 10
 R1 = 5
 
 ; Perform arithmetic operations
+
 add R0, 20 ; Add 20 to R0
 sub R1, 3  ; Subtract 3 from R1
 mul R0, R1 ; Multiply R0 by R1
