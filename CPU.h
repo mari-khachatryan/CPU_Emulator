@@ -39,6 +39,9 @@ CPU::CPU(const std::string& p) : path{ p } {
     Parsing pars(path);
     data = pars.getData();
     lables = pars.getLables();
+    for(const auto& pair: lables) {
+    	std::cout << "the labels line first:" << pair.first  << "secord" <<pair.second << std:: endl;
+    }
     for (int i = 0; i < 8; ++i) {
         registers.push_back(Registers(static_cast<Registers::RegisterName>(i)));
     }
@@ -71,17 +74,17 @@ void CPU::run() {
 	    CommandValidator validCom(command);
 	    std::string com = command.getCommand();
 	    std::vector<std::string> args = command.getArguments();
-	    
+	    int lineNum = i;
+	    std::cout << "Cpu tox78" << lineNum << std::endl;
 	    if (!validCom.isValidCommand()) {
 	        exit(0);
 	    }
 	    if (com == "jmp") {
+	    	args[0].pop_back();
 	    	int index = lables[args[0]];
-	        //i = index;
-	    	i = 5;
-	        //data.erase(index);
-    		data.erase(5);
-    		data.erase(7);
+	        i = index;
+	        data.erase(index);
+    		data.erase(lineNum);
 	    } else {
 	        alu.execute(com, args, registers);
 	        std::cout << registers[0].getValue() << std::endl;
