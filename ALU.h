@@ -284,12 +284,14 @@ bool ALU::isDigit(const std::string& str) {
 
 // private:
 
-// 	std::map<std::string, std::function<void(ALU&, Registers&, int)>> operationMap;
-
-//     // Define function pointers for logical operations
-//     std::function<bool(ALU&, Registers&, int)> logicAndFunction;
-//     std::function<bool(ALU&, Registers&, int)> logicOrFunction;
-
+// 	std::map<std::string, std::function<void(Registers&, int)>> operationMap1;
+// 	std::map<std::string, std::function<void(Registers&, Registers&)>> operationMap2;
+// 	std::map<std::string, std::function<bool(Registers&, int)>> logicOperationMap1;
+// 	std::map<std::string, std::function<bool(int, Registers&)>> logicOperationMap2;
+// 	std::map<std::string, std::function<bool(Registers&, Registers&)>> logicOperationMap3;
+// 	std::map<std::string, std::function<void(Registers&)>> printOperation;
+//     std::function<bool( Registers&, int)> logicAndFunction;
+//     std::function<bool( Registers&, int)> logicOrFunction;
 
 // 	void move(Registers&, Registers&);
 // 	void move(Registers&, int); 
@@ -313,15 +315,27 @@ bool ALU::isDigit(const std::string& str) {
 // };
 
 // ALU::ALU() {
-//     // Initialize the operationMap with function pointers for various operations
-//     operationMap["move"] = [this](Registers& r1, Registers& r2, int num) { this->move(r1, r2); };
-//     operationMap["increment"] = [this](Registers& r) { this->increment(r); };
-//     operationMap["decrement"] = [this](Registers& r) { this->decrement(r); };
-//     operationMap["add"] = [this](Registers& r1, int num) { this->add(r1, num); };
-//     operationMap["sub"] = [this](Registers& r1, int num) { this->sub(r1, num); };
-//     operationMap["mul"] = [this](Registers& r1, int num) { this->mul(r1, num); };
-//     operationMap["div"] = [this](Registers& r1, int num) { this->div(r1, num); };
-//     // ... add more operations as needed
+//     // Initialize the operationMap with function pointers for various operationss
+//     operationMap1["move"] = [this](Registers& r1, int num) { this->move(r1, num); };
+//     operationMap2["move"] = [this](Registers& r1, Registers& r2) { this->move(r1, r2); };
+//     operationMap1["increment"] = [this](Registers& r, int num) { this->increment(r); };
+//     operationMap1["decrement"] = [this](Registers& r, int num) { this->decrement(r); };
+//     operationMap1["add"] = [this](Registers& r1, int num) { this->add(r1, num); };
+//     operationMap2["add"] = [this](Registers& r1, Registers& r2) { this->add(r1, r2); };
+//     operationMap1["sub"] = [this](Registers& r1, int num) { this->sub(r1, num); };
+//     operationMap2["sub"] = [this](Registers& r1, Registers& r2) { this->sub(r1, r2); };
+//     operationMap1["mul"] = [this](Registers& r1, int num) { this->mul(r1, num); };
+//     operationMap2["mul"] = [this](Registers& r1, Registers& r2) { this->mul(r1, r2); };
+//     operationMap1["div"] = [this](Registers& r1, int num) { this->div(r1, num); };
+//     operationMap2["div"] = [this](Registers& r1, Registers& r2) { this->div(r1, r2); };
+//     logicOperationMap1["logicAnd"] = std::function<bool(Registers&, int)>([this](Registers& r1, int num) { return this->logicAnd(r1, num); });
+//     logicOperationMap1["logicOr"] = std::function<bool(Registers&, int)>([this](Registers& r1, int num) { return this->logicOr(r1, num); });
+//     logicOperationMap2["logicAnd"] = std::function<bool(int, Registers&)>([this](int num, Registers& r1) { return this->logicAnd(num, r1); });
+//     logicOperationMap2["logicOr"] = std::function<bool(int, Registers&)>([this](int num, Registers& r1) { return this->logicOr(num, r1); });
+//     logicOperationMap3["logicAnd"] = std::function<bool(Registers&, Registers&)>([this](Registers& r1, Registers& r2) { return this->logicAnd(r1, r2); });
+//     logicOperationMap3["logicOr"] = std::function<bool(Registers&, Registers&)>([this](Registers& r1, Registers& r2) { return this->logicOr(r1, r2); });
+
+//    	printOperation["print"] = [this](Registers& r) {this->print(r); };
 // }
 
 // void ALU::move(Registers& r1, Registers& r2) {
@@ -435,44 +449,108 @@ bool ALU::isDigit(const std::string& str) {
 
 
 // void ALU::execute(const std::string& command, const std::vector<std::string>& arguments, std::vector<Registers>& reg) {
-//     // Check if the command exists in the operationMap
-//     auto operationIterator = operationMap.find(command);
+//     // Check if the command exists in the operationMap1
+//     auto operationIterator1 = operationMap1.find(command);
 
-//     if (operationIterator != operationMap.end()) {
-//         // Operation found, execute it based on the function pointer
-//         if (arguments.size() == 0) {
-//             // No arguments provided, call the operation without arguments
-//             operationIterator->second(*this, reg[0], 0);
-//         } else if (arguments.size() == 1) {
+//     if (operationIterator1 != operationMap1.end()) {
+//         // Operation found in operationMap1, execute it based on the function pointer
+//         if (arguments.size() == 2) {
 //             // Single argument provided, parse it as an integer
-//             if (isDigit(arguments[0])) {
-//                 int num = std::stoi(arguments[0]);
-//                 operationIterator->second(*this, reg[0], num);
-//             } else {
-//                 std::cerr << "Invalid argument for '" << command << "' operation." << std::endl;
-//             }
-//         } else if (arguments.size() == 2) {
-//             // Two arguments provided, parse them and call the operation accordingly
 //             if (isDigit(arguments[1])) {
 //                 int num = std::stoi(arguments[1]);
-//                 operationIterator->second(*this, reg[0], num);
+//                 operationIterator1->second(reg[0], num);
 //             } else {
-//                 // Second argument is not numeric, check if it's a register
-//                 auto secondRegisterIterator = operationMap.find(arguments[1]);
-//                 if (secondRegisterIterator != operationMap.end()) {
-//                     // Second argument is a valid register, call the operation with two registers
-//                     secondRegisterIterator->second(*this, reg[0], reg[1]);
-//                 } else {
-//                     std::cerr << "Invalid second argument for '" << command << "' operation." << std::endl;
-//                 }
+//                 std::cerr << "Invalid argument for '" << command << "' operation." << std::endl;
 //             }
 //         } else {
 //             std::cerr << "Invalid number of arguments for '" << command << "' operation." << std::endl;
 //         }
 //     } else {
-//         std::cerr << "Unknown operation: " << command << std::endl;
+//         // Check if the command exists in the operationMap2
+//         auto operationIterator2 = operationMap2.find(command);
+
+//         if (operationIterator2 != operationMap2.end()) {
+//             // Operation found in operationMap2, execute it based on the function pointer
+//             if (arguments.size() == 1) {
+//                 // Single argument provided, find the target register by name
+//                 auto targetRegister = std::find_if(reg.begin(), reg.end(), [&arguments](const Registers& r) {
+//                     return r.getRegisterName() == arguments[0];
+//                 });
+
+//                 if (targetRegister != reg.end()) {
+//                     operationIterator2->second(reg[0], *targetRegister);
+//                 } else {
+//                     std::cerr << "Invalid register name in '" << command << "' operation." << std::endl;
+//                 }
+//             } else {
+//                 std::cerr << "Invalid number of arguments for '" << command << "' operation." << std::endl;
+//             }
+//         } else {
+//             // Check if the command exists in the logicOperationMap1
+//             auto logicOperationIterator1 = logicOperationMap1.find(command);
+
+//             if (logicOperationIterator1 != logicOperationMap1.end()) {
+//                 // Logic operation found in logicOperationMap1, execute it based on the function pointer
+//                 if (arguments.size() == 1) {
+//                     // Single argument provided, parse it as an integer
+//                     if (isDigit(arguments[0])) {
+//                         int num = std::stoi(arguments[0]);
+//                         bool result = logicOperationIterator1->second(reg[0], num);
+//                         std::cout << "Logic result: " << (result ? "true" : "false") << std::endl;
+//                     } else {
+//                         std::cerr << "Invalid argument for '" << command << "' operation." << std::endl;
+//                     }
+//                 } else {
+//                     std::cerr << "Invalid number of arguments for '" << command << "' operation." << std::endl;
+//                 }
+//             } else {
+//                 // Check if the command exists in the logicOperationMap2
+//                 auto logicOperationIterator2 = logicOperationMap2.find(command);
+
+//                 if (logicOperationIterator2 != logicOperationMap2.end()) {
+//                     // Logic operation found in logicOperationMap2, execute it based on the function pointer
+//                     if (arguments.size() == 1) {
+//                         // Single argument provided, parse it as an integer
+//                         if (isDigit(arguments[1])) {
+//                             int num = std::stoi(arguments[1]);
+//                             bool result = logicOperationIterator2->second(num, reg[0]);
+//                             std::cout << "Logic result: " << (result ? "true" : "false") << std::endl;
+//                         } else {
+//                             std::cerr << "Invalid argument for '" << command << "' operation." << std::endl;
+//                         }
+//                     } else {
+//                         std::cerr << "Invalid number of arguments for '" << command << "' operation." << std::endl;
+//                     }
+//                 } else {
+//                     // Check if the command exists in the logicOperationMap3
+//                     auto logicOperationIterator3 = logicOperationMap3.find(command);
+
+//                     if (logicOperationIterator3 != logicOperationMap3.end()) {
+//                         // Logic operation found in logicOperationMap3, execute it based on the function pointer
+//                         if (arguments.size() == 1) {
+//                             // Single argument provided, find the target register by name
+//                             auto targetRegister = std::find_if(reg.begin(), reg.end(), [&arguments](const Registers& r) {
+//                                 return r.getRegisterName() == arguments[0];
+//                             });
+
+//                             if (targetRegister != reg.end()) {
+//                                 bool result = logicOperationIterator3->second(reg[0], *targetRegister);
+//                                 std::cout << "Logic result: " << (result ? "true" : "false") << std::endl;
+//                             } else {
+//                                 std::cerr << "Invalid register name in '" << command << "' operation." << std::endl;
+//                             }
+//                         } else {
+//                             std::cerr << "Invalid number of arguments for '" << command << "' operation." << std::endl;
+//                         }
+//                     } else {
+//                         std::cerr << "Unknown operation: " << command << std::endl;
+//                     }
+//                 }
+//             }
+//         }
 //     }
 // }
+
 
       
 // bool ALU::isDigit(const std::string& str) {
@@ -485,4 +563,3 @@ bool ALU::isDigit(const std::string& str) {
 // }
 
 // #endif  //ALU_H
-
